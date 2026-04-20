@@ -143,43 +143,31 @@ export class App {
   _render() {
     const app = document.getElementById('app');
     app.innerHTML = `
+      <div class="stars-overlay"></div>
       <header class="header">
         <div class="container header-content">
-          <div class="logo">📚 Adaptive Study</div>
-          <nav>
-            <button id="eyeTrackingToggle" class="btn btn-secondary">Enable Eye Tracking</button>
-          </nav>
+          <div class="logo">ADAPTIC <span>SYSTEMS</span></div>
+          <div class="status-hud">
+            <div id="eyeStatus" class="eye-indicator">
+              <span class="status-dot"></span> 
+              <span class="status-text">SENSOR OFFLINE</span>
+            </div>
+            <button id="eyeTrackingToggle" class="btn btn-hud">INITIATE TRACKING</button>
+          </div>
         </div>
       </header>
 
       <main class="main">
-        <div class="container">
-          <div class="main-content">
-            <div id="timerContainer"></div>
-            <div id="scoreContainer"></div>
-          </div>
+        <div class="container grid-layout">
+          <section id="timerContainer" class="glass-panel"></section>
+          <aside id="scoreContainer" class="glass-panel"></aside>
         </div>
       </main>
-
-      <footer class="footer">
-        <div class="container">
-          <p>Adaptive Study System - Stay focused, achieve more</p>
-        </div>
-      </footer>
     `;
 
-    // Initialize UI components
-    this.timerDisplay = new TimerDisplay(
-      document.getElementById('timerContainer'),
-      this.timer
-    );
+    this.timerDisplay = new TimerDisplay(document.getElementById('timerContainer'), this.timer);
+    this.scoreDisplay = new ScoreDisplay(document.getElementById('scoreContainer'), this.gamification);
 
-    this.scoreDisplay = new ScoreDisplay(
-      document.getElementById('scoreContainer'),
-      this.gamification
-    );
-
-    // Setup eye tracking toggle
     document.getElementById('eyeTrackingToggle').addEventListener('click', () => {
       this._toggleEyeTracking();
     });
