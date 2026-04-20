@@ -143,28 +143,36 @@ export class App {
   _render() {
     const app = document.getElementById('app');
     app.innerHTML = `
-      <div class="stars-overlay"></div>
-      <header class="header">
-        <div class="container header-content">
-          <div class="logo">ADAPTIC <span>SYSTEMS</span></div>
-          <div class="status-hud">
-            <div id="eyeStatus" class="eye-indicator">
-              <span class="status-dot"></span> 
-              <span class="status-text">SENSOR OFFLINE</span>
-            </div>
-            <button id="eyeTrackingToggle" class="btn btn-hud">INITIATE TRACKING</button>
-          </div>
-        </div>
-      </header>
+      <div class="space-engine">
+        <div class="nebula"></div>
+        <div class="stars"></div>
+      </div>
 
-      <main class="main">
-        <div class="container grid-layout">
-          <section id="timerContainer" class="glass-panel"></section>
-          <aside id="scoreContainer" class="glass-panel"></aside>
-        </div>
-      </main>
+      <div class="ui-layer">
+        <header class="top-nav">
+          <div class="brand">
+            <span class="glitch" data-text="ADAPTIC">ADAPTIC</span>
+            <span class="version">v2.6.0</span>
+          </div>
+          
+          <div class="system-status">
+            <div id="eyeStatus" class="hud-widget">
+              <div class="scanner-line"></div>
+              <span class="status-label">GAZE TRACKER</span>
+              <span class="status-value">OFFLINE</span>
+            </div>
+            <button id="eyeTrackingToggle" class="btn-plasma">ENGAGE SENSORS</button>
+          </div>
+        </header>
+
+        <main class="dashboard">
+          <div id="timerContainer" class="glass-module main-module"></div>
+          <div id="scoreContainer" class="glass-module side-module"></div>
+        </main>
+      </div>
     `;
 
+    // Re-initialize displays
     this.timerDisplay = new TimerDisplay(document.getElementById('timerContainer'), this.timer);
     this.scoreDisplay = new ScoreDisplay(document.getElementById('scoreContainer'), this.gamification);
 
