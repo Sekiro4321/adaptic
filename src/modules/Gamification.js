@@ -10,8 +10,8 @@ export class Gamification {
     // Configuration
     this.pointsPerFocusMinute = options.pointsPerFocusMinute || 10;
     this.pointsPerFocusSession = options.pointsPerFocusSession || 100;
-    this.penaltyPerDistraction = options.penaltyPerDistraction || 50;
-    this.streakBonus = options.streakBonus || 20;
+    this.penaltyPerDistraction = options.penaltyPerDistraction || 5;
+    this.streakBonus = options.streakBonus || 15;
     this.maxStreak = options.maxStreak || 5;
 
     // State

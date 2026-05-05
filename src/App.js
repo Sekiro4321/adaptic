@@ -26,14 +26,14 @@ export class App {
     this.gamification = new Gamification({
       pointsPerFocusMinute: 10,
       pointsPerFocusSession: 100,
-      penaltyPerDistraction: 50,
-      streakBonus: 20,
+      penaltyPerDistraction: 5,
+      streakBonus: 15,
       maxStreak: 5
     });
 
     this.eyeTracking = new EyeTracking({
-      distractionDelay: 15000,
-      gazeThreshold: 0.3,
+      distractionDelay: 25000,
+      gazeThreshold: 0.5,
       fps: 30,
       debugMode: false
     });
