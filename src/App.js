@@ -129,12 +129,50 @@ export class App {
     this.eyeTracking.on('distractionDetected', (data) => {
       this.gamification.applyDistractionPenalty();
       notification.distraction();
+      this._updateEyeStatus('DISTRACTED');
     });
 
     // Show notification when gaze is restored
     this.eyeTracking.on('gazeRestored', (data) => {
       notification.info('Good! You\'re back on track.');
+      this._updateEyeStatus('TRACKING');
     });
+
+    // Update status when eye tracking starts
+    this.eyeTracking.on('started', (data) => {
+      this._updateEyeStatus('TRACKING');
+    });
+
+    // Update status when eye tracking stops
+    this.eyeTracking.on('stopped', (data) => {
+      this._updateEyeStatus('OFFLINE');
+    });
+  }
+
+  /**
+   * Update eye tracking status display
+   */
+  _updateEyeStatus(status) {
+    const statusValue = document.getElementById('eyeStatus')?.querySelector('.status-value');
+    if (!statusValue) return;
+
+    switch (status) {
+      case 'OFFLINE':
+        statusValue.textContent = 'OFFLINE';
+        statusValue.className = 'status-value eye-status-offline';
+        break;
+      case 'TRACKING':
+        statusValue.textContent = 'TRACKING';
+        statusValue.className = 'status-value eye-status-online';
+        break;
+      case 'DISTRACTED':
+        statusValue.textContent = 'DISTRACTED';
+        statusValue.className = 'status-value eye-status-offline';
+        break;
+      default:
+        statusValue.textContent = 'UNKNOWN';
+        statusValue.className = 'status-value';
+    }
   }
 
   /**
@@ -159,7 +197,7 @@ export class App {
             <div id="eyeStatus" class="hud-widget">
               <div class="scanner-line"></div>
               <span class="status-label">GAZE TRACKER</span>
-              <span class="status-value">OFFLINE</span>
+              <span class="status-value eye-status-offline">OFFLINE</span>
             </div>
             <button id="eyeTrackingToggle" class="btn-plasma">ENGAGE SENSORS</button>
           </div>
@@ -186,19 +224,28 @@ export class App {
    */
   async _toggleEyeTracking() {
     const button = document.getElementById('eyeTrackingToggle');
+    const statusValue = document.getElementById('eyeStatus').querySelector('.status-value');
     const status = this.eyeTracking.getStatus();
 
     if (status.isRunning) {
       this.eyeTracking.stop();
-      button.textContent = 'Enable Eye Tracking';
+      button.textContent = 'ENGAGE SENSORS';
+      statusValue.textContent = 'OFFLINE';
+      statusValue.className = 'status-value eye-status-offline';
       notification.info('Eye tracking disabled');
     } else {
       try {
+        statusValue.textContent = 'INITIALIZING...';
+        statusValue.className = 'status-value eye-status-scanning';
         await this.eyeTracking.start();
-        button.textContent = 'Disable Eye Tracking';
+        button.textContent = 'DISENGAGE SENSORS';
+        statusValue.textContent = 'ONLINE';
+        statusValue.className = 'status-value eye-status-online';
         notification.success('Eye tracking enabled');
       } catch (error) {
         console.error('Failed to start eye tracking:', error);
+        statusValue.textContent = 'ERROR';
+        statusValue.className = 'status-value eye-status-offline';
         notification.error('Failed to enable eye tracking. Please check camera permissions.');
       }
     }
